@@ -1,12 +1,13 @@
 package ImplementationDAO.RolesImplDAO;
 
 import ImplementationDAO.SuperExtd;
+import Instances.InfoSources.Book;
 import InterfacesDAO.RolesDAO.UserDAO;
 import Instances.Roles.User;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.sql.*;
+import java.util.Vector;
 
 /**
  * Created by Андрей on 28.02.2017.
@@ -15,15 +16,10 @@ public class UserImplDAO extends SuperExtd implements UserDAO {
 
 
     @Override
-    public void update(User model) {
-
-    }
-
-    @Override
     public User CheckPasswordAndEmail(String Password, String Email) throws SQLException {
         String query = "Select * from users where password=? AND email=?";
         PreparedStatement preparedStatement = GetConnection().prepareStatement(query);
-        StringBuffer bufferPassword=new StringBuffer(Password);
+        StringBuffer bufferPassword = new StringBuffer(Password);
         bufferPassword.reverse();
         preparedStatement.setString(1, String.valueOf(bufferPassword));
         preparedStatement.setString(2, Email);
@@ -33,7 +29,7 @@ public class UserImplDAO extends SuperExtd implements UserDAO {
         else {
             bufferPassword.reverse();
             return new User(resultSet.getInt("ID"), resultSet.getInt("role"),
-                    Email, resultSet.getString("name"),Password);
+                    Email, resultSet.getString("name"), Password);
         }
     }
 
@@ -43,11 +39,11 @@ public class UserImplDAO extends SuperExtd implements UserDAO {
         PreparedStatement preparedStatement = GetConnection().prepareStatement(query);
         preparedStatement.setString(1, userEmail);
         preparedStatement.setString(2, userName);
-        StringBuffer bufferPassword=new StringBuffer(userPassword);
+        StringBuffer bufferPassword = new StringBuffer(userPassword);
         bufferPassword.reverse();
         preparedStatement.setString(3, String.valueOf(bufferPassword));
-        if (preparedStatement.executeUpdate() == 1)
-            return true;
+        if (preparedStatement.executeUpdate() == 1) return true;
         else return false;
     }
+
 }

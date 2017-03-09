@@ -23,11 +23,7 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="false" />
-    <loaded-nodes>
-      <connection connection-id="072ce7db-19ee-4583-8044-0c3e68088673">
-        <schema name="cataloguer" object-types="column, constraint, function, index, procedure, table, dataset trigger, view" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="072ce7db-19ee-4583-8044-0c3e68088673">
@@ -46,6 +42,7 @@
         <condition column="id" operator="=" value="" active="true" />
       </filter>
     </filter-list>
+    <filter-list connection-id="072ce7db-19ee-4583-8044-0c3e68088673" dataset="cataloguer.audiolist" active-filter-id="EMPTY_FILTER" />
     <filter-list connection-id="072ce7db-19ee-4583-8044-0c3e68088673" dataset="cataloguer.audio" active-filter-id="EMPTY_FILTER">
       <filter id="b6311a8c-acc5-45fa-b01e-3d0c3483674c" name="Rammstein" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="audioAthor" operator="=" value="Rammstein" active="true" />

@@ -38,7 +38,7 @@ public class VideoImplDAO extends InfoImplDAO {
 
     @Override
     public Vector<Video> GetUserItem( String search) throws SQLException, IOException {
-        Vector<Video> videos = new Vector<Video>();
+        Vector<Video> videos = new Vector<>();
         String query;
         if (search == null)
             query = "SELECT  video.videoID, video.videoName, video.videoSize, videolist.addingDT, video.videoBLOB FROM users," +
@@ -106,6 +106,19 @@ public class VideoImplDAO extends InfoImplDAO {
             selectFromVideo.close();
         }
     }
+
+    @Override
+    public void DeleteItem(String criterion) throws IOException, SQLException {
+        Vector<Instances.InfoSources.Video> videos=GetUserItem(criterion);
+        String query="Delete  from videolist where videoID=? and userID=?;";
+        PreparedStatement preparedStatement = GetConnection().prepareStatement(query);
+        preparedStatement.setInt(2,MainModel.getId());
+        for(Instances.InfoSources.Video video: videos) {
+            preparedStatement.setInt(1, video.getInstID());
+            preparedStatement.executeUpdate();
+        }
+    }
+
     @Override
     public Vector<Doc> ExtructItems() {
         MainInfo.setInstNum(4);

@@ -1,6 +1,7 @@
 package Scene;
 
 import ImplementationDAO.RolesImplDAO.UserImplDAO;
+import Instances.Roles.User;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -42,8 +43,10 @@ class NewUserWindow {
                     !enterPassword.getText().isEmpty() && !enterName.getText().isEmpty()) {
                 UserImplDAO userImplDAO=new UserImplDAO();
                 try {
-                    if(userImplDAO.addUser(enterName.getText(), enterPassword.getText(), enterEmail.getText()))
+                    if(userImplDAO.addUser(enterName.getText(), enterPassword.getText(), enterEmail.getText())) {
+                        User user = userImplDAO.CheckPasswordAndEmail(enterPassword.getText(), enterEmail.getText());
                         new WorkWindow(newUserStage);
+                    }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

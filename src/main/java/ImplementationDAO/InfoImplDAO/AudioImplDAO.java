@@ -22,7 +22,7 @@ public class AudioImplDAO extends InfoImplDAO {
 
     @Override
     public Vector<Audio> GetItem() throws SQLException, IOException {
-        Vector<Audio> audios = new Vector<Audio>();
+        Vector<Audio> audios = new Vector<>();
         String query = "Select * from audio";
 
         // System.out.println(GetStatement().isClosed())
@@ -100,6 +100,18 @@ public class AudioImplDAO extends InfoImplDAO {
             insertIntoAudioList.close();
             selectFromAudio.close();
             checkingAudio.close();
+        }
+    }
+
+    @Override
+    public void DeleteItem(String criterion) throws IOException, SQLException {
+        Vector<Instances.InfoSources.Audio> audios=GetUserItem(criterion);
+        String query="Delete  from audiolist where audioID=? and userID=?;";
+        PreparedStatement preparedStatement = GetConnection().prepareStatement(query);
+        preparedStatement.setInt(2,MainModel.getId());
+        for(Instances.InfoSources.Audio audio: audios) {
+            preparedStatement.setInt(1, audio.getInstID());
+            preparedStatement.executeUpdate();
         }
     }
 

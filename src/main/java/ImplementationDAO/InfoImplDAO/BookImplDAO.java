@@ -105,6 +105,18 @@ public class BookImplDAO extends InfoImplDAO {
     }
 
     @Override
+    public void DeleteItem(String criterion) throws IOException, SQLException {
+        Vector<Instances.InfoSources.Book> books=GetUserItem(criterion);
+        String query="Delete  from bookslist where bookID=? and userID=?;";
+        PreparedStatement preparedStatement = GetConnection().prepareStatement(query);
+        preparedStatement.setInt(2,MainModel.getId());
+        for(Instances.InfoSources.Book book: books) {
+            preparedStatement.setInt(1, book.getInstID());
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    @Override
     public Vector<Book> ExtructItems() {
         MainInfo.setInstNum(2);
         return super.ExtructItems();

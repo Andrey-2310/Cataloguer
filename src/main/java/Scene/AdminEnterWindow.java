@@ -59,7 +59,7 @@ class AdminEnterWindow {
                     new WorkWindow(adminStage);
                 }
                 else {
-                    System.out.println("Sorry, you're from plant");
+                    System.out.println("The password is incorrect");
                     passwordField.clear();
                 }
             } catch (SQLException e) {

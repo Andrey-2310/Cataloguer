@@ -13,16 +13,10 @@ import java.sql.SQLException;
 public class GuestImplDAO extends SuperExtd implements GuestDAO{
 
     @Override
-    public void update(Guest model) {
-
-    }
-    @Override
     public boolean addGuest(String guestName) throws SQLException {
         String query = "Insert into users ( name, role) values(?, 3)";
         PreparedStatement preparedStatement = GetConnection().prepareStatement(query);
         preparedStatement.setString(1, guestName);
-        if (preparedStatement.executeUpdate() == 1)
-            return true;
-        else return false;
+        return preparedStatement.executeUpdate() == 1;
     }
 }

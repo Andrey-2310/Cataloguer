@@ -22,7 +22,7 @@ public class DocImplDAO extends InfoImplDAO {
 
     @Override
     public Vector<Doc> GetItem() throws SQLException, IOException {
-        Vector<Doc> docs = new Vector<Doc>();
+        Vector<Doc> docs = new Vector<>();
         String query = "Select * from docs";
 
         // System.out.println(GetStatement().isClosed());
@@ -38,7 +38,7 @@ public class DocImplDAO extends InfoImplDAO {
 
     @Override
     public Vector<Doc> GetUserItem( String search) throws SQLException, IOException {
-        Vector<Doc> docs = new Vector<Doc>();
+        Vector<Doc> docs = new Vector<>();
         String query;
         if (search == null)
             query = "SELECT  docs.docID, docs.docName, docs.docSize, docslist.addingDT,docs.docBLOB FROM users," +
@@ -98,6 +98,18 @@ public class DocImplDAO extends InfoImplDAO {
             insertIntoDoc.close();
             insertIntoDocList.close();
             selectFromDoc.close();
+        }
+    }
+
+    @Override
+    public void DeleteItem(String criterion) throws IOException, SQLException {
+        Vector<Instances.InfoSources.Doc> docs=GetUserItem(criterion);
+        String query="Delete  from docslist where docsID=? and userID=?;";
+        PreparedStatement preparedStatement = GetConnection().prepareStatement(query);
+        preparedStatement.setInt(2,MainModel.getId());
+        for(Instances.InfoSources.Doc doc: docs) {
+            preparedStatement.setInt(1, doc.getInstID());
+            preparedStatement.executeUpdate();
         }
     }
 

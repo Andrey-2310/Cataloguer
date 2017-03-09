@@ -25,8 +25,11 @@ public abstract class InfoImplDAO<T extends MainInfo> extends SuperExtd implemen
     public abstract void SetItem(File itemFile) throws SQLException;
 
     @Override
+    public  abstract void DeleteItem(String criterion) throws IOException, SQLException;
+
+    @Override
     public Vector<T> ExtructItems() {
-        Vector<T> itemsToShow = new Vector<T>();
+        Vector<T> itemsToShow = new Vector<>();
         try {
             switch (MainModel.getRole()) {
             case (2):
