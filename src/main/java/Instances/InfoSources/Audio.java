@@ -2,6 +2,7 @@ package Instances.InfoSources;
 
 import java.io.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by Андрей on 01.03.2017.
@@ -12,7 +13,7 @@ public class Audio extends MainInfo {
 
     public Audio() {}
 
-    public Audio(int audioID, String audioName, Date audioDate, int audioSize, InputStream inputStream) throws IOException {
+    public Audio(int audioID, String audioName, Timestamp audioDate, int audioSize, InputStream inputStream) throws IOException {
         this.instID = audioID;
         this.instName = audioName;
         this.instDate = audioDate;

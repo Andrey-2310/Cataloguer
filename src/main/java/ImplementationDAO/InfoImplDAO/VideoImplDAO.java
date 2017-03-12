@@ -28,16 +28,16 @@ public class VideoImplDAO extends InfoImplDAO {
         // System.out.println(GetStatement().isClosed());
         Statement statement = GetConnection().createStatement();
         ResultSet resultSet = statement.executeQuery(query);
-        Date sqlDate = new Date(System.currentTimeMillis());
+        Timestamp sqlTimestamp = new Timestamp(System.currentTimeMillis());
         while (resultSet.next()) {
             videos.addElement(new Video(resultSet.getInt("videoID"), resultSet.getString("videoName"),
-                    sqlDate, resultSet.getInt("videoSize"), resultSet.getBinaryStream("videoBLOB")));
+                    sqlTimestamp, resultSet.getInt("videoSize"), resultSet.getBinaryStream("videoBLOB")));
         }
         return videos;
     }
 
     @Override
-    public Vector<Video> GetUserItem( String search) throws SQLException, IOException {
+    public Vector<Video> GetUserItem(String search) throws SQLException, IOException {
         Vector<Video> videos = new Vector<>();
         String query;
         if (search == null)
@@ -55,7 +55,7 @@ public class VideoImplDAO extends InfoImplDAO {
         final ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next())
             videos.addElement(new Video(resultSet.getInt("videoID"), resultSet.getString("videoName"),
-                    resultSet.getDate("addingDT"), resultSet.getInt("videoSize"),
+                    resultSet.getTimestamp("addingDT"), resultSet.getInt("videoSize"),
                     resultSet.getBinaryStream("videoBLOB")));
         preparedStatement.close();
 
@@ -63,7 +63,9 @@ public class VideoImplDAO extends InfoImplDAO {
     }
 
     @Override
-    public void SetItem(File itemFile) throws SQLException {
+    public boolean SetItem(File itemFile) throws SQLException {
+       if(!super.SetItem(itemFile))
+           return false;
         String query0 = "SELECT * FROM video WHERE videoName=?;";
         String query1 = "INSERT INTO video (videoName, videoSize, videoBLOB) VALUES(?, ?, ?);";
         String query2 = "SELECT videoID FROM video WHERE videoName=?;";
@@ -95,25 +97,29 @@ public class VideoImplDAO extends InfoImplDAO {
 
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } catch (NullPointerException e) {
             System.out.println("You close the window without adding a file");
+            return false;
         } finally {
             checkingVideo.close();
             insertIntoVideo.close();
             insertIntoVideoList.close();
             selectFromVideo.close();
         }
+        return true;
     }
 
     @Override
     public void DeleteItem(String criterion) throws IOException, SQLException {
-        Vector<Instances.InfoSources.Video> videos=GetUserItem(criterion);
-        String query="Delete  from videolist where videoID=? and userID=?;";
+        Vector<Instances.InfoSources.Video> videos = GetUserItem(criterion);
+        String query = "Delete  from videolist where videoID=? and userID=?;";
         PreparedStatement preparedStatement = GetConnection().prepareStatement(query);
-        preparedStatement.setInt(2,MainModel.getId());
-        for(Instances.InfoSources.Video video: videos) {
+        preparedStatement.setInt(2, MainModel.getId());
+        for (Instances.InfoSources.Video video : videos) {
             preparedStatement.setInt(1, video.getInstID());
             preparedStatement.executeUpdate();
         }

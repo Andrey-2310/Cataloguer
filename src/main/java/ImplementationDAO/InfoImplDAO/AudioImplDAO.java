@@ -1,18 +1,15 @@
 package ImplementationDAO.InfoImplDAO;
 
-import ImplementationDAO.SuperExtd;
 import Instances.InfoSources.Audio;
-import Instances.InfoSources.Book;
-import Instances.InfoSources.Doc;
 import Instances.InfoSources.MainInfo;
 import Instances.Roles.MainModel;
-import InterfacesDAO.CatInstDAO.InfoDAO;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 /**
@@ -28,10 +25,12 @@ public class AudioImplDAO extends InfoImplDAO {
         // System.out.println(GetStatement().isClosed())
         Statement statement = GetConnection().createStatement();
         ResultSet resultSet = statement.executeQuery(query);
-        Date sqlDate = new Date(System.currentTimeMillis());
+        Timestamp sqlTimestamp = new Timestamp(System.currentTimeMillis());
+        String s = new SimpleDateFormat("MM/dd/yyyy-mm-dd hh:mm:ss").format(sqlTimestamp);
+        System.out.println(s);
         while (resultSet.next()) {
             audios.addElement(new Audio(resultSet.getInt("audioID"), resultSet.getString("audioName"),
-                    sqlDate, resultSet.getInt("audioSize"), resultSet.getBinaryStream("audioBLOB")));
+                    sqlTimestamp, resultSet.getInt("audioSize"), resultSet.getBinaryStream("audioBLOB")));
         }
         return audios;
     }
@@ -55,7 +54,7 @@ public class AudioImplDAO extends InfoImplDAO {
         final ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next())
             audios.addElement(new Instances.InfoSources.Audio(resultSet.getInt("audioID"), resultSet.getString("audioName"),
-                    resultSet.getDate("addingDT"), resultSet.getInt("audioSize"),
+                    resultSet.getTimestamp("addingDT"), resultSet.getInt("audioSize"),
                     resultSet.getBinaryStream("audioBLOB")));
         preparedStatement.close();
 
@@ -63,7 +62,8 @@ public class AudioImplDAO extends InfoImplDAO {
     }
 
     @Override
-    public void SetItem(File itemFile) throws SQLException {
+    public boolean SetItem(File itemFile) throws SQLException {
+        if(!super.SetItem(itemFile)) return false;
         String query0 = "SELECT * FROM audio WHERE audioName=?;";
         String query1 = "INSERT INTO audio (audioName, audioSize, audioBLOB) values(?, ?, ?);";
         String query2 = "SELECT audioID FROM audio WHERE audioName=?;";
@@ -91,16 +91,20 @@ public class AudioImplDAO extends InfoImplDAO {
             insertIntoAudioList.executeUpdate();
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } catch (NullPointerException e) {
             System.out.println("You close the window without adding a file");
+            return false;
         } finally {
             insertIntoAudio.close();
             insertIntoAudioList.close();
             selectFromAudio.close();
             checkingAudio.close();
         }
+        return true;
     }
 
     @Override

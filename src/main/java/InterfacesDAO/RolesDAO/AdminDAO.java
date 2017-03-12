@@ -1,7 +1,6 @@
 package InterfacesDAO.RolesDAO;
 
 import Instances.Roles.Admin;
-import Instances.Roles.User;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -16,4 +15,6 @@ public interface AdminDAO extends RoleDAO<Admin> {
     boolean CheckAdminPassword(String password) throws SQLException;
     String GetAdminPassword() throws SQLException;
     Vector<Text[]> GetAllUsers() throws SQLException, IOException;
+    Vector<Text[]> SearchUsers(String criterion) throws SQLException;
+    void DeleteUser(String criterion) throws SQLException;
 }

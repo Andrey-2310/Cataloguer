@@ -3,6 +3,7 @@ package Instances.InfoSources;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by Андрей on 01.03.2017.
@@ -11,7 +12,7 @@ public class Doc extends MainInfo {
 
     public Doc() {}
 
-    public Doc(int docID, String docName, Date docDate, int docSize, InputStream inputStream) {
+    public Doc(int docID, String docName, Timestamp docDate, int docSize, InputStream inputStream) {
         this.instID = docID;
         this.instName = docName;
         this.instSize = docSize;
@@ -27,11 +28,11 @@ public class Doc extends MainInfo {
         this.instName = docName;
     }
 
-    public Date getDocDate() {
+    public Timestamp getDocDate() {
         return instDate;
     }
 
-    public void setDocDate(Date docDate) {
+    public void setDocDate(Timestamp docDate) {
         this.instDate = docDate;
     }
 

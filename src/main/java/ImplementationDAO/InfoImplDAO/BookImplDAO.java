@@ -27,10 +27,10 @@ public class BookImplDAO extends InfoImplDAO {
         String query = "Select * from books";
         Statement statement = GetConnection().createStatement();
         ResultSet resultSet = statement.executeQuery(query);
-        Date sqlDate = new Date(System.currentTimeMillis());
+        Timestamp sqlTimestamp = new Timestamp(System.currentTimeMillis());
         while (resultSet.next()) {
             books.addElement(new Book(resultSet.getInt("bookID"), resultSet.getString("bookName"),
-                    sqlDate, resultSet.getInt("bookSize"),
+                    sqlTimestamp, resultSet.getInt("bookSize"),
                     resultSet.getBinaryStream("bookBLOB")));
         }
         statement.close();
@@ -56,7 +56,7 @@ public class BookImplDAO extends InfoImplDAO {
         final ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next())
             books.addElement(new Book(resultSet.getInt("bookID"), resultSet.getString("bookName"),
-                    resultSet.getDate("addingDT"), resultSet.getInt("bookSize"),
+                    resultSet.getTimestamp("addingDT"), resultSet.getInt("bookSize"),
                     resultSet.getBinaryStream("bookBLOB")));
         preparedStatement.close();
 
@@ -64,7 +64,8 @@ public class BookImplDAO extends InfoImplDAO {
     }
 
     @Override
-    public void SetItem(File itemFile) throws SQLException {
+    public boolean SetItem(File itemFile) throws SQLException {
+        if(!super.SetItem(itemFile)) return false;
         String query0 = "SELECT * FROM books WHERE bookName=?;";
         String query1 = "INSERT INTO books (bookName, bookSize, bookBLOB) values(?, ?, ?);";
         String query2 = "SELECT bookID FROM books WHERE bookName=?;";
@@ -92,16 +93,20 @@ public class BookImplDAO extends InfoImplDAO {
             insertIntoBooksList.executeUpdate();
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } catch (NullPointerException e) {
             System.out.println("You close the window without adding a file");
+            return false;
         } finally {
             checkingBook.close();
             insertIntoBook.close();
             insertIntoBooksList.close();
             selectFromBook.close();
         }
+        return  true;
     }
 
     @Override

@@ -3,6 +3,8 @@ package Instances.InfoSources;
 import java.io.*;
 import java.sql.Blob;
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 /**
  * Created by Андрей on 01.03.2017.
@@ -14,7 +16,7 @@ public class Book extends MainInfo {
         return instName;
     }
 
-    public Date getBookDate() {
+    public Timestamp getBookDate() {
         return instDate;
     }
 
@@ -28,10 +30,7 @@ public class Book extends MainInfo {
     //  private final File bookFile= new File("bookFile.pdf");
 
 
-    public Book() {
-    }
-
-    public Book(int bookID, String bookName, Date bookDate, int bookSize, InputStream inputStream) throws IOException {
+    public Book(int bookID, String bookName, Timestamp bookDate, int bookSize, InputStream inputStream) throws IOException {
         this.instID = bookID;
         this.instName = bookName;
         this.instDate = bookDate;

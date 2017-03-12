@@ -2,6 +2,7 @@ package Instances.InfoSources;
 
 import java.sql.Blob;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by Андрей on 05.03.2017.
@@ -9,7 +10,7 @@ import java.sql.Date;
 public  class MainInfo {
     int instID;
     String instName;
-    Date instDate;
+    Timestamp instDate;
     int instSize;
     Blob instBLOB;
     protected static int instNum;
@@ -29,7 +30,7 @@ public  class MainInfo {
         return instName;
     }
 
-    public Date getInstDate() {
+    public Timestamp getInstDate() {
         return instDate;
     }
 

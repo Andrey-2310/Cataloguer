@@ -28,10 +28,10 @@ public class DocImplDAO extends InfoImplDAO {
         // System.out.println(GetStatement().isClosed());
         Statement statement = GetConnection().createStatement();
         ResultSet resultSet = statement.executeQuery(query);
-        Date sqlDate = new Date(System.currentTimeMillis());
+        Timestamp sqlTimestamp = new Timestamp(System.currentTimeMillis());
         while (resultSet.next()) {
             docs.addElement(new Doc(resultSet.getInt("docID"), resultSet.getString("docName"),
-                    sqlDate, resultSet.getInt("docSize"), resultSet.getBinaryStream("docBLOB")));
+                    sqlTimestamp, resultSet.getInt("docSize"), resultSet.getBinaryStream("docBLOB")));
         }
         return docs;
     }
@@ -53,7 +53,7 @@ public class DocImplDAO extends InfoImplDAO {
         final ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next())
             docs.addElement(new Doc(resultSet.getInt("docID"), resultSet.getString("docName"),
-                    resultSet.getDate("addingDT"), resultSet.getInt("docSize"),
+                    resultSet.getTimestamp("addingDT"), resultSet.getInt("docSize"),
                     resultSet.getBinaryStream("docBLOB")));
         preparedStatement.close();
 
@@ -61,7 +61,8 @@ public class DocImplDAO extends InfoImplDAO {
     }
 
     @Override
-    public void SetItem(File itemFile) throws SQLException {
+    public boolean SetItem(File itemFile) throws SQLException {
+        if(!super.SetItem(itemFile))return false;
         String query0 = "SELECT * FROM docs WHERE docName=?;";
         String query1 = "INSERT INTO docs (docName, docSize, docBLOB) values(?, ?, ?);";
         String query2 = "SELECT docID FROM docs WHERE docName=?;";
@@ -89,16 +90,20 @@ public class DocImplDAO extends InfoImplDAO {
             insertIntoDocList.executeUpdate();
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } catch (NullPointerException e) {
             System.out.println("You close the window without adding a file");
+            return false;
         } finally {
             checkingDoc.close();
             insertIntoDoc.close();
             insertIntoDocList.close();
             selectFromDoc.close();
         }
+        return true;
     }
 
     @Override

@@ -1,13 +1,12 @@
 package Scene;
 
-import ImplementationDAO.InfoImplDAO.AudioImplDAO;
-import ImplementationDAO.InfoImplDAO.BookImplDAO;
-import ImplementationDAO.InfoImplDAO.DocImplDAO;
-import ImplementationDAO.InfoImplDAO.VideoImplDAO;
+import ImplementationDAO.InfoImplDAO.*;
+
 import ImplementationDAO.RolesImplDAO.AdminImplDAO;
 import ImplementationDAO.SuperExtd;
 import Instances.InfoSources.*;
 import Instances.Roles.MainModel;
+import Instances.Roles.User;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -49,9 +48,6 @@ class WorkWindow {
     private VideoImplDAO videoImplDAO = new VideoImplDAO();
     private AdminImplDAO adminImplDAO = new AdminImplDAO();
 
-    private void handleScrollBarAction(ActionEvent event) {
-
-    }
 
     private void OkeyButtonAction() {
         try {
@@ -76,6 +72,11 @@ class WorkWindow {
                 Vector<Video> videos = videoImplDAO.GetUserItem("*" + searchField.getText() + "*");
                 ShowItems(videos);
                 if (!videos.isEmpty()) deleteImage.setVisible(true);
+            case 5:
+                Vector<Text[]> users = adminImplDAO.SearchUsers("*" + searchField.getText() + "*");
+                ShowUsers(users);
+                if (!users.isEmpty()) deleteImage.setVisible(true);
+                scrollPane.setContent(UserTableLayout);
             }
             deleteImage.setOnMousePressed(this::handleDeleteButtonAction);
         } catch (SQLException | IOException e) {
@@ -88,7 +89,7 @@ class WorkWindow {
     }
 
 
-    private void handleCancelButtonAction(ActionEvent event) {
+    private void handleCancelButtonAction(ActionEvent event)  {
         okeyButton.setVisible(false);
         cancelButton.setVisible(false);
         searchField.clear();
@@ -110,6 +111,14 @@ class WorkWindow {
         case 4:
             VideoImplDAO videoImplDAO = new VideoImplDAO();
             ShowItems(videoImplDAO.ExtructItems());
+            break;
+        case 5:
+            try {
+                ShowUsers(adminImplDAO.GetAllUsers());
+                scrollPane.setContent(UserTableLayout);
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
+            }
             break;
         }
         deleteImage.setVisible(false);
@@ -137,6 +146,9 @@ class WorkWindow {
                 VideoImplDAO videoImplDAO = new VideoImplDAO();
                 videoImplDAO.SetItem(SuperExtd.ChooseFile(new Stage()));
                 ShowItems(videoImplDAO.GetUserItem(null));
+                break;
+            case 5:
+                new NewUserWindow(new Stage());
                 break;
             }
         } catch (SQLException | IOException e) {
@@ -167,6 +179,10 @@ class WorkWindow {
                 SetTableLayout();
                 ShowItems(videoImplDAO.ExtructItems());
                 break;
+            case 5:
+                adminImplDAO.DeleteUser("*"+searchField.getText()+"*");
+                ShowUsers(adminImplDAO.GetAllUsers());
+                scrollPane.setContent(UserTableLayout);
             }
             searchField.clear();
         } catch (IOException | SQLException e) {
@@ -202,7 +218,7 @@ class WorkWindow {
     private void SetTableLayout() {
         scrollPane.setContent(InfoTableLayout);
         InfoTableLayout.setGridLinesVisible(true);
-        Text[] headText = new Text[]{new Text("№"), new Text("Name"), new Text("Size, Mb"), new Text("Date"), new Text("Blob")};
+        Text[] headText = new Text[]{new Text("№"), new Text("Name"), new Text("Size"), new Text("Date"), new Text("Blob")};
 
         Node node = InfoTableLayout.getChildren().get(0);
         InfoTableLayout.getChildren().clear();
@@ -290,7 +306,7 @@ class WorkWindow {
         });
         usersButton.setOnAction(event -> {
            scrollPane.setContent(UserTableLayout);
-
+           MainInfo.setInstNum(5);
         /*    AdminImplDAO adminImplDAO = new AdminImplDAO();
             try {
                 ShowUsers(adminImplDAO.GetAllUsers());
@@ -313,7 +329,7 @@ class WorkWindow {
                 for (Text t : newText) {
                     GridPane.setHalignment(t, HPos.CENTER);
                 }
-                newText[1].setWrappingWidth(200);
+                newText[1].setWrappingWidth(180);
                 InfoTableLayout.addRow(i + 1, newText);
 
             }
@@ -323,6 +339,9 @@ class WorkWindow {
         UserTableLayout.setGridLinesVisible(true);
         Text[] headText = new Text[]{new Text("№"), new Text("ID"), new Text("Name"),
                 new Text("Password"), new Text("E-mail"), new Text("Role"), new Text("Place")};
+        Node node = UserTableLayout.getChildren().get(0);
+        UserTableLayout.getChildren().clear();
+        UserTableLayout.getChildren().add(0, node);
         UserTableLayout.addRow(0, headText);
         for (Text t : headText) {
             GridPane.setHalignment(t, HPos.CENTER);
@@ -361,8 +380,8 @@ class WorkWindow {
         /*Pages Layout and components*/
         SetPagesLayout(workStage);
         InfoTableLayout.getRowConstraints().add(new RowConstraints(20));
-        InfoTableLayout.getColumnConstraints().addAll(new ColumnConstraints(30), new ColumnConstraints(200),
-                new ColumnConstraints(50), new ColumnConstraints(100), new ColumnConstraints(100));
+        InfoTableLayout.getColumnConstraints().addAll(new ColumnConstraints(30), new ColumnConstraints(180),
+                new ColumnConstraints(30), new ColumnConstraints(140), new ColumnConstraints(100));
 
 
 
@@ -377,6 +396,7 @@ class WorkWindow {
         workStage.setScene(new Scene(workWindowLayout, 580, 350));
         workStage.setTitle("Home Cataloguer");
     }
+
 
 
 }

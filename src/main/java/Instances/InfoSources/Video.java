@@ -2,6 +2,7 @@ package Instances.InfoSources;
 
 import java.io.InputStream;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by Андрей on 01.03.2017.
@@ -10,7 +11,7 @@ public class Video extends MainInfo {
 
     public Video() {}
 
-    public Video(int videoID, String videoName, Date videoDate, int videoSize, InputStream inputStream) {
+    public Video(int videoID, String videoName, Timestamp videoDate, int videoSize, InputStream inputStream) {
         this.instID=videoID;
         this.instSize=videoSize;
         this.instName=videoName;

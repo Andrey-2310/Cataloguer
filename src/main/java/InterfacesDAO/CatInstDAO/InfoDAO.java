@@ -13,7 +13,7 @@ import java.util.Vector;
 public interface InfoDAO<Info extends MainInfo>{
     Vector<Info> GetItem() throws SQLException, IOException;
     Vector<Info> GetUserItem(String search) throws SQLException, IOException;
-    void SetItem(File itemFile) throws SQLException;
+    boolean SetItem(File itemFile) throws SQLException;
     void DeleteItem(String criterion) throws IOException, SQLException;
     Vector<Info> ExtructItems();
 }
