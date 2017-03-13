@@ -23,7 +23,15 @@ import java.sql.SQLException;
 /**
  * Created by Андрей on 25.02.2017.
  */
+
+/**
+ * This class represents Enter Window for Guest
+ */
 class GuestEnterWindow {
+    /**
+     * This method is constructor for scene on Guest Enter Window
+     * @param guestStage - stage for building app
+     */
     GuestEnterWindow(Stage guestStage) {
         HBox box = new HBox();
         GridPane guestLayout = new GridPane();
@@ -43,6 +51,7 @@ class GuestEnterWindow {
                 GuestImplDAO guestImplDAO=new GuestImplDAO();
                 try {
                     guestImplDAO.addGuest(enterName.getText());
+                    MainModel.setName(enterName.getText());
                     MainModel.setRole(3);
                     new WorkWindow(guestStage);
                 } catch (SQLException e) {

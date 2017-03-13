@@ -2,12 +2,16 @@ package ImplementationDAO.InfoImplDAO;
 
 import ImplementationDAO.SuperExtd;
 import Instances.InfoSources.Audio;
+import Instances.InfoSources.Doc;
 import Instances.InfoSources.MainInfo;
 import Instances.Roles.MainModel;
 import InterfacesDAO.CatInstDAO.InfoDAO;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +29,7 @@ public abstract class InfoImplDAO<T extends MainInfo> extends SuperExtd implemen
 
     @Override
     public  boolean SetItem(File itemFile) throws SQLException{
-        if ((int) (itemFile.length() / 1024 / 1024 + 1) > 10) {
+        if (itemFile==null || (int)itemFile.length() / 1024 / 1024 + 1 > 10) {
             System.out.println("File is too big");
             return false;
         }
@@ -71,5 +75,23 @@ public abstract class InfoImplDAO<T extends MainInfo> extends SuperExtd implemen
             e.printStackTrace();
         }
         return itemsToShow;
+    }
+
+    @Override
+    public void OpenItem(int number) throws IOException, SQLException, InterruptedException {
+        Vector<T> items= GetUserItem(null);
+        if(number > items.size()) return;
+
+        String filename = items.get(number-1).getInstName();
+        if(SuperExtd.OpenFile("D:\\уник\\КПП"+ "\\" + filename))return;
+        Blob blob = items.get(number-1).getInstBLOB();
+        InputStream is = blob.getBinaryStream();
+        FileOutputStream fos = new FileOutputStream("D:\\уник\\КПП"+ "\\" + filename);
+        int b = 0;
+        while ((b = is.read()) != -1) {
+            fos.write(b);
+        }
+        System.out.println("File is saved");
+        SuperExtd.OpenFile("D:\\уник\\КПП"+ "\\" + filename);
     }
 }

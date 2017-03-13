@@ -30,7 +30,7 @@ public class AudioImplDAO extends InfoImplDAO {
         System.out.println(s);
         while (resultSet.next()) {
             audios.addElement(new Audio(resultSet.getInt("audioID"), resultSet.getString("audioName"),
-                    sqlTimestamp, resultSet.getInt("audioSize"), resultSet.getBinaryStream("audioBLOB")));
+                    sqlTimestamp, resultSet.getInt("audioSize"), resultSet.getBlob("audioBLOB")));
         }
         return audios;
     }
@@ -55,7 +55,7 @@ public class AudioImplDAO extends InfoImplDAO {
         while (resultSet.next())
             audios.addElement(new Instances.InfoSources.Audio(resultSet.getInt("audioID"), resultSet.getString("audioName"),
                     resultSet.getTimestamp("addingDT"), resultSet.getInt("audioSize"),
-                    resultSet.getBinaryStream("audioBLOB")));
+                    resultSet.getBlob("audioBLOB")));
         preparedStatement.close();
 
         return audios;

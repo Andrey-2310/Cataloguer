@@ -6,6 +6,17 @@ import java.sql.SQLException;
 /**
  * Created by Андрей on 28.02.2017.
  */
-public interface GuestDAO extends RoleDAO<Guest> {
-    public boolean addGuest(String guestName) throws SQLException;
+
+/**
+ * * This interfaces declarates realization of methods that are connected to guest
+ */
+public interface GuestDAO {
+
+    /**
+     *  This method helps to add new guest
+     * @param guestName - name of new guest
+     * @return true if guest is added, false if not
+     * @throws SQLException
+     */
+     boolean addGuest(String guestName) throws SQLException;
 }

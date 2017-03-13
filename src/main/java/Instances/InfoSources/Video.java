@@ -1,6 +1,7 @@
 package Instances.InfoSources;
 
 import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -9,14 +10,8 @@ import java.sql.Timestamp;
  */
 public class Video extends MainInfo {
 
-    public Video() {}
-
-    public Video(int videoID, String videoName, Timestamp videoDate, int videoSize, InputStream inputStream) {
-        this.instID=videoID;
-        this.instSize=videoSize;
-        this.instName=videoName;
-        this.instDate=videoDate;
-        //
+    public Video(int videoID, String videoName, Timestamp videoDate, int videoSize, Blob blob) {
+        super(videoID,videoName,videoDate, videoSize, blob);
     }
 
 

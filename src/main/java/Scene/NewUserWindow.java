@@ -1,6 +1,7 @@
 package Scene;
 
 import ImplementationDAO.RolesImplDAO.UserImplDAO;
+import Instances.Roles.MainModel;
 import Instances.Roles.User;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -17,7 +18,15 @@ import java.sql.SQLException;
 /**
  * Created by Андрей on 03.03.2017.
  */
+
+/**
+ * This class represents Enter Window for New User
+ */
 class NewUserWindow {
+    /**
+     *  This method is constructor for scene on New User Enter Window. App use it to create new user
+     * @param newUserStage - stage for building app
+     */
     NewUserWindow(Stage newUserStage) {
         GridPane newUserLayout =new GridPane();
         Scene newUserScene =new Scene(newUserLayout, 300, 150);

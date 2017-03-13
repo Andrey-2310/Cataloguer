@@ -13,7 +13,17 @@ public  class MainInfo {
     Timestamp instDate;
     int instSize;
     Blob instBLOB;
+
+    public MainInfo(int instID, String instName, Timestamp instDate, int instSize, Blob instBLOB) {
+        this.instID = instID;
+        this.instName = instName;
+        this.instDate = instDate;
+        this.instSize = instSize;
+        this.instBLOB = instBLOB;
+    }
+
     protected static int instNum;
+
     public int getInstID() {
         return instID;
     }

@@ -31,7 +31,7 @@ public class VideoImplDAO extends InfoImplDAO {
         Timestamp sqlTimestamp = new Timestamp(System.currentTimeMillis());
         while (resultSet.next()) {
             videos.addElement(new Video(resultSet.getInt("videoID"), resultSet.getString("videoName"),
-                    sqlTimestamp, resultSet.getInt("videoSize"), resultSet.getBinaryStream("videoBLOB")));
+                    sqlTimestamp, resultSet.getInt("videoSize"), resultSet.getBlob("videoBLOB")));
         }
         return videos;
     }
@@ -56,7 +56,7 @@ public class VideoImplDAO extends InfoImplDAO {
         while (resultSet.next())
             videos.addElement(new Video(resultSet.getInt("videoID"), resultSet.getString("videoName"),
                     resultSet.getTimestamp("addingDT"), resultSet.getInt("videoSize"),
-                    resultSet.getBinaryStream("videoBLOB")));
+                    resultSet.getBlob("videoBLOB")));
         preparedStatement.close();
 
         return videos;

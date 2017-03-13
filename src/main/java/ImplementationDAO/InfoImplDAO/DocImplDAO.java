@@ -7,10 +7,7 @@ import Instances.InfoSources.MainInfo;
 import Instances.Roles.MainModel;
 import InterfacesDAO.CatInstDAO.InfoDAO;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 import java.util.Vector;
 
@@ -31,7 +28,7 @@ public class DocImplDAO extends InfoImplDAO {
         Timestamp sqlTimestamp = new Timestamp(System.currentTimeMillis());
         while (resultSet.next()) {
             docs.addElement(new Doc(resultSet.getInt("docID"), resultSet.getString("docName"),
-                    sqlTimestamp, resultSet.getInt("docSize"), resultSet.getBinaryStream("docBLOB")));
+                    sqlTimestamp, resultSet.getInt("docSize"), resultSet.getBlob("docBLOB")));
         }
         return docs;
     }
@@ -54,7 +51,7 @@ public class DocImplDAO extends InfoImplDAO {
         while (resultSet.next())
             docs.addElement(new Doc(resultSet.getInt("docID"), resultSet.getString("docName"),
                     resultSet.getTimestamp("addingDT"), resultSet.getInt("docSize"),
-                    resultSet.getBinaryStream("docBLOB")));
+                    resultSet.getBlob("docBLOB")));
         preparedStatement.close();
 
         return docs;
@@ -123,5 +120,6 @@ public class DocImplDAO extends InfoImplDAO {
         MainInfo.setInstNum(1);
        return super.ExtructItems();
     }
+
 
 }

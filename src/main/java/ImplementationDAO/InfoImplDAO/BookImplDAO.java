@@ -31,7 +31,7 @@ public class BookImplDAO extends InfoImplDAO {
         while (resultSet.next()) {
             books.addElement(new Book(resultSet.getInt("bookID"), resultSet.getString("bookName"),
                     sqlTimestamp, resultSet.getInt("bookSize"),
-                    resultSet.getBinaryStream("bookBLOB")));
+                    resultSet.getBlob("bookBLOB")));
         }
         statement.close();
         resultSet.close();
@@ -57,7 +57,7 @@ public class BookImplDAO extends InfoImplDAO {
         while (resultSet.next())
             books.addElement(new Book(resultSet.getInt("bookID"), resultSet.getString("bookName"),
                     resultSet.getTimestamp("addingDT"), resultSet.getInt("bookSize"),
-                    resultSet.getBinaryStream("bookBLOB")));
+                    resultSet.getBlob("bookBLOB")));
         preparedStatement.close();
 
         return books;

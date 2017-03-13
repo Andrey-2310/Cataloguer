@@ -11,35 +11,9 @@ import java.sql.Timestamp;
  */
 public class Book extends MainInfo {
 
+    public Book(int bookID, String bookName, Timestamp bookDate, int bookSize, Blob blob) throws IOException {
+     super(bookID, bookName, bookDate, bookSize, blob);
 
-    public String getBookName() {
-        return instName;
-    }
-
-    public Timestamp getBookDate() {
-        return instDate;
-    }
-
-    public int getBookSize() {
-        return instSize;
-    }
-
-    public Blob getBookBLOB() {
-        return instBLOB;
-    }
-    //  private final File bookFile= new File("bookFile.pdf");
-
-
-    public Book(int bookID, String bookName, Timestamp bookDate, int bookSize, InputStream inputStream) throws IOException {
-        this.instID = bookID;
-        this.instName = bookName;
-        this.instDate = bookDate;
-        this.instSize = bookSize;
-      //  this.bookBLOB= bookBLOB;
-      /*  FileOutputStream outputStream=new FileOutputStream(bookFile);
-        byte[] buffer=new byte[1024*1024*10];
-        while(inputStream.read(buffer)>0)
-            outputStream.write(buffer);*/
     }
 
     @Override

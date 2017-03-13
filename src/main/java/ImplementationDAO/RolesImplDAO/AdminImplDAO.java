@@ -28,7 +28,7 @@ public class AdminImplDAO extends SuperExtd implements AdminDAO {
     }
 
     @Override
-    public String GetAdminPassword() throws SQLException {
+    public String GetAdminName() throws SQLException {
         String query = "Select name from users where role=1";
         Statement statement = GetConnection().createStatement();
         ResultSet resultSet = statement.executeQuery(query);

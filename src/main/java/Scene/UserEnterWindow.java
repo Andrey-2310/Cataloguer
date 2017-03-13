@@ -19,6 +19,10 @@ import java.sql.SQLException;
  * Created by Андрей on 25.02.2017.
  */
 class UserEnterWindow {
+    /**
+     * This method is constructor for scene on User Enter Window. App use it to enter app as user
+     * @param userStage - stage for building app
+     */
     UserEnterWindow(Stage userStage) {
         userStage.setTitle("Entering");
         GridPane userLayout = new GridPane();

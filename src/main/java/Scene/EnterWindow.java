@@ -20,7 +20,15 @@ import javafx.scene.Scene;
 /**
  * Created by Андрей on 25.02.2017.
  */
+
+/**
+ * This class represents General Enter Window
+ */
 class EnterWindow {
+    /**
+     * In this method user may choose one of three roles: admin, user or guest
+     * @param appStage -stage for creating app
+     */
    EnterWindow(Stage appStage){
        BorderPane enterLayout=new BorderPane();
        GridPane logLayout=new GridPane();

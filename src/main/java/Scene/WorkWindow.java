@@ -32,6 +32,10 @@ import java.util.Vector;
 /**
  * Created by Андрей on 24.02.2017.
  */
+
+/**
+ * This class represents the main window for working in app
+ */
 class WorkWindow {
     private BorderPane workWindowLayout;
     private HBox VidgetsLayout;
@@ -41,15 +45,19 @@ class WorkWindow {
     private final Button cancelButton = new Button("Cancel");
     private ImageView deleteImage;
     private final TextField searchField = new TextField();
-    private ScrollPane scrollPane=new ScrollPane();
+    private ScrollPane scrollPane = new ScrollPane();
     private BookImplDAO bookImplDAO = new BookImplDAO();
     private DocImplDAO docImplDAO = new DocImplDAO();
     private AudioImplDAO audioImplDAO = new AudioImplDAO();
     private VideoImplDAO videoImplDAO = new VideoImplDAO();
     private AdminImplDAO adminImplDAO = new AdminImplDAO();
 
-
-    private void OkeyButtonAction() {
+    /**
+     * this function handler Okey Button in  Searching mode.
+     * It reads data from tetxlabel and then call GetUserItem method of item which is turn on right now
+     * @param event - event which occured and it's the cause of action
+     */
+    private void handleSearchingOkeyButtonAction(ActionEvent event) {
         try {
             SetTableLayout();
             switch (MainInfo.getInstNum()) {
@@ -72,6 +80,7 @@ class WorkWindow {
                 Vector<Video> videos = videoImplDAO.GetUserItem("*" + searchField.getText() + "*");
                 ShowItems(videos);
                 if (!videos.isEmpty()) deleteImage.setVisible(true);
+                break;
             case 5:
                 Vector<Text[]> users = adminImplDAO.SearchUsers("*" + searchField.getText() + "*");
                 ShowUsers(users);
@@ -84,12 +93,65 @@ class WorkWindow {
         }
     }
 
-    private void handleSearchingOkeyButtonAction(ActionEvent event) {
-        OkeyButtonAction();
+
+    /**
+     * this function handlers Okey Button in Playing mode
+     * It calls OpenFiles method of item which is turn on right now, search item with entered index
+     * @param event  event which occured and it's the cause of action
+     */
+    private void handlePlayingOkeyButtonAction(ActionEvent event) {
+        if (searchField.getText().matches("[+]?\\d+"))
+            try {
+                switch (MainInfo.getInstNum()) {
+                case 1:
+                    docImplDAO.OpenItem(Integer.valueOf(searchField.getText()));
+                    break;
+                case 2:
+                    bookImplDAO.OpenItem(Integer.valueOf(searchField.getText()));
+                    break;
+                case 3:
+                    audioImplDAO.OpenItem(Integer.valueOf(searchField.getText()));
+                    break;
+                case 4:
+                    videoImplDAO.OpenItem(Integer.valueOf(searchField.getText()));
+                    break;
+                }
+            } catch (SQLException | IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        else {
+            System.out.println("Enter correct number");
+            searchField.clear();
+        }
     }
 
 
-    private void handleCancelButtonAction(ActionEvent event)  {
+    /**
+     * this function handlers Play Button, creates handler for searchField, okeyButton and cancelButton
+     * @param event  event which occured and it's the cause of action
+     */
+    private void handlePlayButtonAction(MouseEvent event) {
+        searchField.setVisible(true);
+        searchField.setText("Type № to Open");
+        searchField.setOnMouseClicked((event1) -> searchField.clear());
+        searchField.setOnKeyTyped((event1) -> {
+            if (!cancelButton.isVisible() && !okeyButton.isVisible()) {
+                cancelButton.setVisible(true);
+                okeyButton.setVisible(true);
+                okeyButton.setStyle(" -fx-background-color: #1e56ff; -fx-font-weight: bold;");
+            }
+            cancelButton.setOnAction(this::handleCancelButtonAction);
+            okeyButton.setOnAction(this::handlePlayingOkeyButtonAction);
+        });
+    }
+
+    /**
+     * this function handlers Cancel Button. It clears searchfield, and goes back to
+     * table of user cataloguer
+     * @param event - event which occured and it's the cause of action
+     */
+
+    private void handleCancelButtonAction(ActionEvent event) {
         okeyButton.setVisible(false);
         cancelButton.setVisible(false);
         searchField.clear();
@@ -124,6 +186,12 @@ class WorkWindow {
         deleteImage.setVisible(false);
     }
 
+    /**
+     * this function handlers Add Button. It chooses the way to add file
+     * depending on item which is turned on
+     * @param event - event which occured and it's the cause of action
+     */
+
     private void handleAddButtonAction(MouseEvent event) {
         try {
             switch (MainInfo.getInstNum()) {
@@ -156,6 +224,11 @@ class WorkWindow {
         }
     }
 
+    /**
+     * this function handlers Delete Button. It chooses the way to add file
+     * depending on item which is turned on
+     * @param event - event which occured and it's the cause of action
+     */
     private void handleDeleteButtonAction(MouseEvent event) {
         try {
             switch (MainInfo.getInstNum()) {
@@ -180,7 +253,7 @@ class WorkWindow {
                 ShowItems(videoImplDAO.ExtructItems());
                 break;
             case 5:
-                adminImplDAO.DeleteUser("*"+searchField.getText()+"*");
+                adminImplDAO.DeleteUser("*" + searchField.getText() + "*");
                 ShowUsers(adminImplDAO.GetAllUsers());
                 scrollPane.setContent(UserTableLayout);
             }
@@ -190,14 +263,16 @@ class WorkWindow {
         }
     }
 
+
+    /**
+     *  this function handlers Search Button, creates handler for searchField, okeyButton and cancelButton
+     * @param event  event which occured and it's the cause of action
+     */
     private void handleSearchButtonAction(MouseEvent event) {
         searchField.setVisible(true);
         searchField.setText("Type to Search");
         searchField.setOnMouseClicked((event1) -> searchField.clear());
         searchField.setOnKeyTyped((event1) -> {
-            if (event1.getCharacter().equals("\r"))
-                OkeyButtonAction();
-            //  if(event1.getCharacter().equals(""))
             if (!cancelButton.isVisible() && !okeyButton.isVisible()) {
                 cancelButton.setVisible(true);
                 okeyButton.setVisible(true);
@@ -209,12 +284,18 @@ class WorkWindow {
         });
     }
 
+    /**
+     * this method is used to build in layouts in main borderLayout
+     */
     private void SetWorkWindowLayout() {
         workWindowLayout.setCenter(scrollPane);
         workWindowLayout.setLeft(PagesLayout);
         workWindowLayout.setTop(VidgetsLayout);
     }
 
+    /**
+     *  this method is used to build TableLayout
+     */
     private void SetTableLayout() {
         scrollPane.setContent(InfoTableLayout);
         InfoTableLayout.setGridLinesVisible(true);
@@ -231,6 +312,9 @@ class WorkWindow {
 
     }
 
+    /**
+     * this method is used to build VidgetsLayout, set vidgets and their handlers
+     */
     private void SetVidgetsLayout() {
         VidgetsLayout.setMinHeight(40);
         VidgetsLayout.setAlignment(Pos.CENTER_LEFT);
@@ -247,6 +331,8 @@ class WorkWindow {
         searchImage.setOnMousePressed(this::handleSearchButtonAction);
 
         ImageView playImage = new ImageView(new Image("play.png"));
+        playImage.setOnMousePressed(this::handlePlayButtonAction);
+
         Label greetText = new Label("Hi there," + MainModel.getName());
         greetText.setWrapText(true);
         greetText.setMaxWidth(120);
@@ -265,6 +351,11 @@ class WorkWindow {
         VidgetsLayout.getChildren().addAll(searchField, okeyButton, cancelButton, deleteImage);
         deleteImage.setVisible(false);
     }
+
+    /**
+     * this method is used to build PageLayout, set buttons to change page, handlers
+     * @param workStage - event which occured and it's the cause of action
+     */
 
     private void SetPagesLayout(Stage workStage) {
         PagesLayout.setMinSize(100, 300);
@@ -305,21 +396,20 @@ class WorkWindow {
             ShowItems(videoImplDAO.ExtructItems());
         });
         usersButton.setOnAction(event -> {
-           scrollPane.setContent(UserTableLayout);
-           MainInfo.setInstNum(5);
-        /*    AdminImplDAO adminImplDAO = new AdminImplDAO();
-            try {
-                ShowUsers(adminImplDAO.GetAllUsers());
-            } catch (SQLException | IOException e) {
-                e.printStackTrace();
-            }*/
+            scrollPane.setContent(UserTableLayout);
+            MainInfo.setInstNum(5);
         });
 
         backButton.setOnAction((event) -> new EnterWindow(workStage));
     }
 
-    private <Info extends MainInfo> void ShowItems(Vector<Info> itemsToShow) {
 
+    /**
+     * this methods shows all items thst are needed
+     * @param itemsToShow- Vector of user which app needs to show
+     * @param <Info> - it can be Book, Doc, Video, Audio
+     */
+    private <Info extends MainInfo> void ShowItems(Vector<Info> itemsToShow) {
 
         if (!itemsToShow.isEmpty())
             for (int i = 0; i < itemsToShow.size(); i++) {
@@ -329,12 +419,18 @@ class WorkWindow {
                 for (Text t : newText) {
                     GridPane.setHalignment(t, HPos.CENTER);
                 }
-                newText[1].setWrappingWidth(180);
+                newText[1].setWrappingWidth(140);
+                newText[4].setWrappingWidth(140);
                 InfoTableLayout.addRow(i + 1, newText);
 
             }
     }
 
+
+    /**
+     * This method helps to Show all Users
+     * @param users Vector of Text[] in which of them info about one user.
+     */
     private void ShowUsers(Vector<Text[]> users) {
         UserTableLayout.setGridLinesVisible(true);
         Text[] headText = new Text[]{new Text("№"), new Text("ID"), new Text("Name"),
@@ -362,6 +458,10 @@ class WorkWindow {
 
     }
 
+    /**
+     * This method is main in this class. it creates main layout and others issues
+     * @param workStage  - event which occured and it's the cause of action
+     */
     WorkWindow(Stage workStage) {
         /*DAO Implemenattions definition*/
 
@@ -380,8 +480,8 @@ class WorkWindow {
         /*Pages Layout and components*/
         SetPagesLayout(workStage);
         InfoTableLayout.getRowConstraints().add(new RowConstraints(20));
-        InfoTableLayout.getColumnConstraints().addAll(new ColumnConstraints(30), new ColumnConstraints(180),
-                new ColumnConstraints(30), new ColumnConstraints(140), new ColumnConstraints(100));
+        InfoTableLayout.getColumnConstraints().addAll(new ColumnConstraints(30), new ColumnConstraints(140),
+                new ColumnConstraints(30), new ColumnConstraints(140), new ColumnConstraints(140));
 
 
 
@@ -396,7 +496,6 @@ class WorkWindow {
         workStage.setScene(new Scene(workWindowLayout, 580, 350));
         workStage.setTitle("Home Cataloguer");
     }
-
 
 
 }
